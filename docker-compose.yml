@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:10.6
+    container_name: spip_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
+    volumes:
+      - ./db:/var/lib/mysql
+
+  spip:
+    image: ipeos/spip:latest
+    container_name: spip_fpm
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PHP_MEMORY_LIMIT: 256M
+    ports:
+      - "8081:80"
+    volumes:
+      - ../cms/cms/squelettes:/var/www/html/squelettes
+      - spip_config:/var/www/html/config
+      - spip_img:/var/www/html/IMG
+      - spip_local:/var/www/html/local
+      - spip_tmp:/var/www/html/tmp
+      - ./dump:/var/www/html/tmp/dump
+
+  apache:
+    build:
+      context: .
+      dockerfile: apache.dockerFile
+    container_name: front
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    volumes:
+      - ../site/:/usr/local/apache2/htdocs/:ro
+      - ./httpd-ssi.conf:/usr/local/apache2/conf/httpd-ssi.conf:ro
+
+volumes:
+  spip_config:
+  spip_img:
+  spip_local:
+  spip_tmp:
