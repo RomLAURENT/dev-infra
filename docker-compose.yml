@@ -15,7 +15,7 @@ services:
       "--collation-server=utf8mb4_unicode_ci"
     ]
     volumes:
-      - ./db:/var/lib/mysql
+      - mariadb:/var/lib/mysql
 
   spip:
     image: ipeos/spip:latest
@@ -27,10 +27,13 @@ services:
       - PHP_MEMORY_LIMIT=256M
       - SPIP_AUTO_INSTALL=1
       - SPIP_DB_SERVER=mysql
+      - SPIP_DB_HOST=db
       - SPIP_DB_LOGIN=spip
       - SPIP_DB_PASS=spip
       - SPIP_DB_NAME=spip
       - SPIP_SITE_ADDRESS=http://localhost:8081
+      - SPIP_ADMIN_NAME=admin
+      - SPIP_ADMIN_LOGIN=admin
       - SPIP_ADMIN_PASS=A123456*
     ports:
       - "8081:80"
@@ -59,3 +62,4 @@ volumes:
   spip_img:
   spip_local:
   spip_tmp:
+  mariadb:
