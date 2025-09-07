@@ -35,17 +35,17 @@ services:
       - spip_tmp:/var/www/html/tmp
       - ./dump:/var/www/html/tmp/dump
 
-  apache:
-    build:
-      context: .
-      dockerfile: apache.dockerFile
-    container_name: front
-    restart: unless-stopped
-    ports:
-      - "8082:80"
-    volumes:
-      - ../site/:/usr/local/apache2/htdocs/:ro
-      - ./httpd-ssi.conf:/usr/local/apache2/conf/httpd-ssi.conf:ro
+  # apache:
+  #   build:
+  #     context: .
+  #     dockerfile: apache.dockerFile
+  #   container_name: front
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8082:80"
+  #   volumes:
+  #     - ../site/:/usr/local/apache2/htdocs/:ro
+  #     - ./httpd-ssi.conf:/usr/local/apache2/conf/httpd-ssi.conf:ro
 
 volumes:
   spip_config:
